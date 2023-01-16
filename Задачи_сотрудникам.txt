@@ -1,0 +1,586 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <iterator>
+
+using namespace std;
+
+struct human
+{
+	string name;
+	string surname;
+};
+
+struct characteristics
+{
+	string name;
+	string order;
+	int quantity;
+	double price;
+};
+
+class client {
+private:
+	human cli[20] = {
+		{ "ООО","Рога и Копыта" },
+		{ "ООО","Обнал" },
+		{ "ООО","Однодневочка" },
+	};
+public:
+	ofstream fout;
+	ifstream fin;
+	int n = 3;
+	void Print() {
+		cout << "                  Клиенты компании " << endl;
+		cout << endl;
+		for (int i = 0; i < n; i++) {
+			cout << setw(6) << " Форма организации предприятия:" << setw(10) << (cli + i)->name<< setw(10);
+			cout << setw(6) << " Название предприятия:" << setw(10) << (cli + i)->surname << endl;
+		}
+	}
+
+	void add() {
+		if (n == 20) {
+			cout << "Список клиентов полон!" << endl;
+			return;
+		}
+		cout << "Форма организации предприятия:" << endl;
+		cin >> cli[n].name;
+		cout << " Название предприятия:" << endl;
+		cin >> cli[n].surname;
+		n++;
+	}
+
+	void del() {
+		if (n == 0) {
+			cout << "Клиентов нет!" << endl;
+			return;
+		}
+		cout << "Название предприятия:" << endl;
+		string cliname;
+		cin >> cliname;
+		int icli = -1;
+		for (int i = 0; i < n; i++) {
+			if (cliname == cli[i].surname) {
+				icli = i;
+				break;
+			}
+		}
+		if (icli == -1) {
+			cout << "Такого клиента нет" << endl;
+			return;
+		}
+		cli[icli] = cli[n - 1];
+		n--;
+		cout << "Успешное удаление клиента!" << endl;
+	}
+
+	void change() {
+		if (n == 0) {
+			cout << "Клиентов нет!" << endl;
+			return;
+		}
+		cout << "Введите клиентское предприятие" << endl;
+		string cliname;
+		cin >> cliname;
+		int icli = -1;
+		for (int i = 0; i < n; i++) {
+			if (cliname == cli[i].surname) {
+				cout << "Форма организации предприятия:" << endl;
+				cin >> cli[i].name;
+				cout << "Название предприятия:" << endl;
+				cin >> cli[i].surname;
+				icli = i;
+				break;
+			}
+		}
+		if (icli == -1) {
+			cout << "Такого клиента нет" << endl;
+			return;
+		}
+		cout << "Успешное редактирование клиента!" << endl;
+
+	}
+
+	void recording() {
+		fout.open("клиенты.txt");
+		fout << n << endl;
+		for (int i = 0; i < n; i++) {
+			fout << cli[i].name << endl;
+			fout << cli[i].surname << endl;
+		}
+		fout.close();
+	}
+
+	void readData() {
+		fin.open("выгрузка.txt");
+		fin >> n;
+		fin.ignore();
+		for (int i = 0; i < n; i++) {
+			getline(fin, cli[i].name);
+			getline(fin, cli[i].surname);
+			fin.ignore();
+		}
+		fin.close();
+	}
+};
+
+
+class waiter{
+private:
+	human staff[20] = {
+		{ "Ярослав","Соколов" },
+		{ "Святослав","Дорогомилов" },
+		{ "Любава","Бажутина" },
+	};
+public:
+	ofstream fout;
+	ifstream fin;
+	int n = 3;
+	void Print() {
+		cout << "                   Сотрудники " << endl;
+		cout << endl;
+		for (int i = 0; i < n; i++) {
+			cout << setw(10) << " Имя сотрудника:" << setw(10) << (staff + i)->name<< setw(10);
+			cout << setw(10) << " Фамилия сотрудника:" << setw(10) << (staff + i)->surname << endl;
+		}
+	}
+
+	void add() {
+		if (n == 20) {
+			cout << "Список сотрудников полон!!!" << endl;
+			return;
+		}
+		cout << "Имя сотрудника:" << endl;
+		cin >> staff[n].name;
+		cout << " Фамилия сотрудника:" << endl;
+		cin >> staff[n].surname;
+		n++;
+	}
+
+	void del() {
+		if (n == 0) {
+			cout << "Сотрудников нет!" << endl;
+			return;
+		}
+		cout << "Имя сотрудника:" << endl;
+		string cliname;
+		cin >> cliname;
+		int icli = -1;
+		for (int i = 0; i < n; i++) {
+			if (cliname == staff[i].name) {
+				icli = i;
+				break;
+			}
+		}
+		if (icli == -1) {
+			cout << "Такого сотрудника нет" << endl;
+			return;
+		}
+		staff[icli] = staff[n - 1];
+		n--;
+		cout << "Успешное удаление сотрудника!" << endl;
+	}
+
+	void change() {
+		if (n == 0) {
+			cout << "Сотрудников нет!" << endl;
+			return;
+		}
+		cout << "Введите имя сотрудника" << endl;
+		string cliname;
+		cin >> cliname;
+		int icli = -1;
+		for (int i = 0; i < n; i++) {
+			if (cliname == staff[i].name) {
+				cout << "Имя сотрудника:" << endl;
+				cin >> staff[i].name;
+				cout << "Фамилия сотрудника:" << endl;
+				cin >> staff[i].surname;
+				icli = i;
+				break;
+			}
+		}
+		if (icli == -1) {
+			cout << "Такого сотрудника нет" << endl;
+			return;
+		}
+		cout << "Успешное редактирование сотрудников!" << endl;
+
+	}
+
+	void recording() {
+		fout.open("сотрудники.txt");
+		fout << n << endl;
+		for (int i = 0; i < n; i++) {
+			fout << staff[i].name << endl;
+			fout << staff[i].surname << endl;
+		}
+		fout.close();
+	}
+
+	void readData() {
+		fin.open("выгрузка.txt");
+		fin >> n;
+		fin.ignore();
+		for (int i = 0; i < n; i++) {
+			getline(fin, staff[i].name);
+			getline(fin, staff[i].surname);
+			fin.ignore();
+		}
+		fin.close();
+	}
+};
+
+class Data {
+private:
+	characteristics cafe[20] = {
+		{ "Однодневочка","Разработка макета визиток",5,5000 },
+		{ "Иванов Игорь Михайлович","Создание айдентики",14,10000 },
+		{ "Рога и Копыта","Создание рекламного видеоролика",7,30000 },
+		{ "Тиньков","Создание формы обратной связи для сайта на JS и PHP",3,3000 },
+		{ "Обнал","Создание 10 макетов для продвижения в соцсетях в соответсвии с брендбуком",5, 7500 },
+		{ "Передовые технологии","Разработка продающего лендинка с эффектом паралакс",30,75000 } };
+
+public:
+	ofstream fout;
+	ifstream fin;
+	int n = 6;
+	void Print() {
+		cout << "                   Задачи сотрудников " << endl;
+		cout << endl;
+		for (int i = 0; i < n; i++) {
+			cout << setw(6) << " Предприятие клиента:" << setw(10) << (cafe + i)->name;
+			cout << setw(6) << " Задача:" << setw(10) << (cafe + i)->order;
+			cout << setw(6) << " Сроки(в днях):" << setw(5) << (cafe + i)->quantity;
+			cout << setw(6) << " Стоимость:" << setw(5) << (cafe + i)->price << endl;
+		}
+	}
+
+	void add() {
+		if (n == 20) {
+			cout << "Каталог полон!" << endl;
+			return;
+		}
+		cout << "Предприятие клиента:" << endl;
+		cin >> cafe[n].name;
+		cout << "Задача:" << endl;
+		cin >> cafe[n].order;
+		cout << "Сроки(в днях):" << endl;
+		cin >> cafe[n].quantity;
+		cout << "Введите стоимость:" << endl;
+		cin >> cafe[n].price;
+		n++;
+
+	}
+
+	void del() {
+		if (n == 0) {
+			cout << "Задач нет!" << endl;
+			return;
+		}
+		cout << "Предприятие клиента:" << endl;
+		string cliname;
+		cin >> cliname;
+		int icli = -1;
+		for (int i = 0; i < n; i++) {
+			if (cliname == cafe[i].name) {
+				icli = i;
+				break;
+			}
+		}
+		if (icli == -1) {
+			cout << "Такого клиента нет" << endl;
+			return;
+		}
+		cafe[icli] = cafe[n - 1];
+		n--;
+		cout << "Успешное удаление задачи!" << endl;
+	}
+
+	void change() {
+		if (n == 0) {
+			cout << "Задач нет!" << endl;
+			return;
+		}
+		cout << "Введите предприятие клиента:" << endl;
+		string cliname;
+		cin >> cliname;
+		int icli = -1;
+		for (int i = 0; i < n; i++) {
+			if (cliname == cafe[i].name) {
+				cout << "Предприятие:" << endl;
+				cin >> cafe[i].name;
+				cout << "Задача:" << endl;
+				cin >> cafe[i].order;
+				cout << "Сроки(в днях):" << endl;
+				cin >> cafe[i].quantity;
+				cout << "Введите стоимость:" << endl;
+				cin >> cafe[i].price;
+				icli = i;
+				break;
+			}
+		}
+		if (icli == -1) {
+			cout << "Такого клиента нет" << endl;
+			return;
+		}
+		cout << "Успешное редактирование задач!" << endl;
+
+	}
+
+	void recording() {
+		fout.open("задачи.txt");
+		fout << n << endl;
+		for (int i = 0; i < n; i++) {
+			fout << cafe[i].name << endl;
+			fout << cafe[i].order << endl;
+			fout << cafe[i].quantity << endl;
+			fout << cafe[i].price << endl;
+		}
+		fout.close();
+	}
+
+	void readData() {
+		fin.open("выгрузка.txt");
+		fin >> n;
+		fin.ignore();
+		for (int i = 0; i < n; i++) {
+			getline(fin, cafe[i].name);
+			getline(fin, cafe[i].order);
+			fin >> cafe[i].quantity;
+			fin.ignore();
+			fin >> cafe[i].price;
+			fin.ignore();
+		}
+		fin.close();
+	}
+};
+class controller : public Data , public waiter,public client{
+private:
+	bool work;
+public:
+	controller() {
+		work = 1;
+	}
+	bool getwork() {
+		return work;
+	}
+	void showMenu() {
+		cout << "Меню:" << endl
+			<< "(1) Сотрудники:" << endl
+			<< "(2) Клиенты:" << endl
+			<< "(3) Задачи:" << endl
+			<< "(0) Выход из программы:" << endl;
+
+		while (getMenuItem() == -1);
+	}
+		void showMenu1() {
+		cout << "Меню:" << endl
+			<< "(1) Список всех сотрудников:" << endl
+			<< "(2) Добавление новых сотрудников:" << endl
+			<< "(3) Удаление сотрудника с указанным именем:" << endl
+			<< "(4) Запись списка сотрудников в файл:" << endl
+			<< "(5) Выгрузка списка сотрудников из файла:" << endl
+			<< "(6) Редактирование данных о сотруднике с указанным именем"<< endl
+			<< "(7) Выход в главное меню"<< endl
+			<< "(0) Выход из программы:" << endl;
+
+		while (getMenuItem1() == -1);
+	}
+		void showMenu2() {
+		cout << "Меню:" << endl
+			<< "(1) Вывод всех клиентов:" << endl
+			<< "(2) Добавление нового клиента:" << endl
+			<< "(3) Удаление клиента с указанной организацией:" << endl
+			<< "(4) Запись списка клиентов в файл:" << endl
+			<< "(5) Выгрузка списка клиентов из файла:" << endl
+			<< "(6) Редактирование клиента с указанной организацией"<< endl
+			<< "(7) Выход в главное меню"<< endl
+			<< "(0) Выход из программы:" << endl;
+
+		while (getMenuItem2() == -1);
+	}
+		void showMenu3() {
+		cout << "Меню:" << endl
+			<< "(1) Вывод всех задач:" << endl
+			<< "(2) Добавление новой задачи:" << endl
+			<< "(3) Удаление задачи с указанным именем:" << endl
+			<< "(4) Запись списка задач в файл:" << endl
+			<< "(5) Выгрузка списка задач из файла:" << endl
+			<< "(6) Редактирование задачи с указанным именем"<< endl
+			<< "(7) Выход в главное меню"<< endl
+			<< "(0) Выход из программы:" << endl;
+
+		while (getMenuItem3() == -1);
+	}
+	int getMenuItem() {
+		char c;
+		cout << "Ваш выбор: ";
+		cin >> c;
+
+		if (c == '1') {
+			showMenu1();
+			return 1;
+		}
+		else if (c == '2') {
+			showMenu2();
+			return 2;
+		}
+		else if (c == '3') {
+			showMenu3();
+			return 3;
+		}
+		else if (c == '0') {
+			work = 0;
+			return 0;
+		}
+		else {
+			return -1;
+		}
+	}
+	int getMenuItem1() {
+
+		char c;
+		cout << "Ваш выбор: ";
+		cin >> c;
+
+		if (c == '1') {
+			waiter::Print();
+			return 1;
+		}
+		else if (c == '2') {
+	
+			waiter::add();
+			return 2;
+		}
+		else if (c == '3') {
+	
+			waiter::del();
+			return 3;
+		}
+		else if (c == '4') {
+	
+			waiter::recording();
+			return 4;
+		}
+		else if (c == '5') {
+
+			waiter::readData();
+			return 5;
+		}
+		else if (c == '6') {
+
+			waiter::change();
+			return 6;
+		}
+		else if (c == '7') {
+			showMenu();
+			return 7;
+		}
+		else if (c == '0') {
+			work = 0;
+			return 0;
+		}
+		else {
+			return -1;
+		}
+	}
+		int getMenuItem2() {
+		char c;
+		cout << "Ваш выбор: ";
+		cin >> c;
+
+		if (c == '1') {
+			client::Print();
+			return 1;
+		}
+		else if (c == '2') {
+			client::add();
+			return 2;
+		}
+		else if (c == '3') {
+			client::del();
+			return 3;
+		}
+		else if (c == '4') {
+			client::recording();
+			return 4;
+		}
+		else if (c == '5') {
+			client::readData();
+			return 5;
+		}
+		else if (c == '6') {
+			client::change();
+			return 6;
+		}
+		else if (c == '7') {
+			showMenu();
+			return 7;
+		}
+		else if (c == '0') {
+			work = 0;
+			return 0;
+		}
+		else {
+			return -1;
+		}
+	}
+		int getMenuItem3() {
+		char c;
+		cout << "Ваш выбор: ";
+		cin >> c;
+
+		if (c == '1') {
+			Data::Print();
+			return 1;
+		}
+		else if (c == '2') {
+			Data::add();
+			return 2;
+		}
+		else if (c == '3') {
+			Data::del();
+			return 3;
+		}
+		else if (c == '4') {
+			Data::recording();
+			return 4;
+		}
+		else if (c == '5') {
+			Data::readData();
+			return 5;
+		}
+		else if (c == '6') {
+			Data::change();
+			return 6;
+		}
+			else if (c == '7') {
+			showMenu();
+			return 7;
+		}
+		else if (c == '0') {
+			work = 0;
+			return 0;
+		}
+		else {
+			return -1;
+		}
+	}
+};
+int main()
+{
+	setlocale(LC_ALL, "rus");
+	//SetConsoleCP(1251);
+	//SetConsoleOutputCP(1251);
+
+
+	controller ctrl;
+	while (ctrl.getwork())
+		ctrl.showMenu();
+	return 0;
+}
